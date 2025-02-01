@@ -25,46 +25,42 @@ const serviceData = [
     title: "Development",
     icon: atom,
     summary:
-      "Custom Web Applications and API Integrations to Support your Home and Business.",
+      "Custom Web Applications and API Integrations to Support your Business.",
     page: "development",
     pricing: "Get a Quote",
     description:
-      "Our development services are designed to help you get the most out of your tech. Whether you need a custom web application, an API integration, or a software solution tailored to your needs, our team is here to help.",
+      "Whether you need a custom web application, an API integration, or a software solution tailored to your needs, our team is here to help.",
   },
 ];
 
 export default function Services() {
   return (
     <div className="flex mb-20">
-      <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 p-4 sm:grid-cols-3">
         {serviceData.map((item) => (
           <Link
             to={`/form/${item.page}`}
-            className={``}
+            className="group"
             aria-current="page"
             key={item.title}
           >
-            <div className="relative flex flex-col items-center justify-center w-5/6 m-auto mb-4 duration-300 bg-white shadow-xl hover:shadow-2xl h-96 hoverborder-gray-200 hover:border-2 group hover:scale-105 rounded-xl">
-              <div className="flex justify-center p-4 mt-4 sm:w-full">
-                <img className="h-16" src={item.icon} alt="House" />
+            <div className="relative flex flex-col items-center justify-start w-5/6 m-auto duration-300 bg-white shadow-xl hover:shadow-2xl hover:scale-105 h-96 rounded-xl">
+              {/* Icon Section */}
+              <div className="flex justify-center w-full p-4 mt-6 sm:mt-8">
+                <img className="h-16" src={item.icon} alt={item.title} />
               </div>
+
+              {/* Title */}
               <h2 className="text-2xl font-semibold text-center">
                 {item.title}
               </h2>
-              <div className="p-2 rounded-b-xl">
-                <div className="p-2 rounded-b-xl">
-                  <p className="text-sm font-semibold text-center text-sky-600 rounded-t-xl">
-                    {item.summary}
-                  </p>
-                  <p className="p-2 text-sm text-center text-gray-500">
-                    {item.description}
-                  </p>
-                  {/* <div className="flex justify-center w-full p-4 mt-6">
-                    <div className="text-lg font-semibold text-yellow-500">
-                      {item.pricing}
-                    </div>
-                  </div> */}
-                </div>
+
+              {/* Content Section */}
+              <div className="flex flex-col items-center justify-between p-4 mt-4 text-center">
+                <p className="text-sm font-semibold text-sky-600">
+                  {item.summary}
+                </p>
+                <p className="mt-2 text-sm text-gray-500">{item.description}</p>
               </div>
             </div>
           </Link>

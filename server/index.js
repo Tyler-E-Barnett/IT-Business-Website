@@ -5,6 +5,15 @@ const helmet = require("helmet");
 const { Form, Customers } = require("./schemas.js");
 const bodyParser = require("body-parser");
 const path = require("path");
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail", // You can use "outlook", "yahoo", or custom SMTP as needed
+  auth: {
+    user: process.env.EMAIL_USER, // Your email address (e.g., Gmail)
+    pass: process.env.EMAIL_PASS, // App password (if using Gmail)
+  },
+});
 
 const app = express();
 
@@ -105,6 +114,26 @@ app.post("/api/form/:type/:apiKey", async (req, res) => {
       { new: true }
     );
 
+    // Send email notification and handle errors
+    try {
+      await transporter.sendMail({
+        from: `"Barnett Technologies Alerts" <${process.env.EMAIL_USER}>`,
+        to: "youremail@example.com", // Your email address where you want the alert
+        subject: `New Ticket Created: ${result.type}`,
+        html: `
+        <h2>New Ticket Submitted</h2>
+        <p><strong>Customer:</strong> ${firstName} ${lastName}</p>
+        <p><strong>Issue:</strong> ${issue}</p>
+        <p><strong>Phone Number:</strong> ${phoneNumber}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Address:</strong> ${address.street}, ${address.city}, ${address.state} ${address.zip}</p>
+      `,
+      });
+      console.log("Email sent successfully");
+    } catch (emailError) {
+      console.error("Error sending email:", emailError);
+    }
+
     // Corrected response format
     res.status(201).json({
       message: "Ticket created and added to customer",
@@ -115,28 +144,6 @@ app.post("/api/form/:type/:apiKey", async (req, res) => {
     res.status(500).json({ error: "Error creating ticket" });
   }
 });
-//   try {
-//     const newEntry = Form({
-//       status: "pending",
-//       type,
-//       firstName,
-//       lastName,
-//       issue,
-//       phoneNumber,
-//       email,
-//       address: {
-//         street: address.street,
-//         city: address.city,
-//         state: address.state,
-//         zip: address.zip,
-//       },
-//     });
-//     const result = await newEntry.save();
-//     res.status(200).send(result);
-//   } catch (error) {
-//     res.status(400).send(error);
-//   }
-// });
 
 const PORT = process.env.PORT || 5001;
 
