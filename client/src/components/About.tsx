@@ -4,7 +4,7 @@ export default function About() {
       <div className="p-8 m-4 text-center bg-white sm:leading-loose sm:text-xl">
         <p className="text-2xl font-bold text-sky-800 sm:text-4xl">
           Welcome to{" "}
-          <span className="font-semibold text-blue-600">
+          <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-sky-500">
             Barnett Technologies
           </span>
         </p>
