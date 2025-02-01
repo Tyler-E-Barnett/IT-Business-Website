@@ -1,16 +1,18 @@
 export default function About() {
   return (
-    <div className="flex justify-center h-1/6">
-      <div className="p-4 m-8 font-serif text-center text-sky-800 sm:w-2/3 sm:leading-loose sm:text-xl">
-        <p className="text-xl sm:text-3xl">
-          {" "}
+    <div className="flex items-center justify-center ">
+      <div className="p-8 m-4 text-center bg-white sm:leading-loose sm:text-xl">
+        <p className="text-2xl font-bold text-sky-800 sm:text-4xl">
           Welcome to{" "}
-          <span className="font-semibold">Barnett Technologies.</span>
+          <span className="font-semibold text-blue-600">
+            Barnett Technologies
+          </span>
         </p>
-        <p className="mt-3 text-xs text-gray-600 sm:text-base">
-          We provide IT and Development Solutions for your Home and Business.
+        <p className="mt-4 text-base text-gray-700 sm:text-lg">
+          We provide cutting-edge IT and Development Solutions for your Home and
+          Business.
         </p>
-        <p className="mt-2 text-sm text-gray-600 sm:text-lg">
+        <p className="mt-3 text-sm text-gray-600 sm:text-base">
           Choose a service below to get started!
         </p>
       </div>

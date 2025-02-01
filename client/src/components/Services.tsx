@@ -35,7 +35,7 @@ const serviceData = [
 
 export default function Services() {
   return (
-    <div className="flex mb-40">
+    <div className="flex mb-20">
       <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-3">
         {serviceData.map((item) => (
           <Link
@@ -44,7 +44,7 @@ export default function Services() {
             aria-current="page"
             key={item.title}
           >
-            <div className="relative flex flex-col items-center justify-center w-5/6 m-auto mb-4 duration-300 shadow-xl hover:shadow-2xl h-96 hoverborder-gray-200 hover:border-2 group hover:scale-105 rounded-xl">
+            <div className="relative flex flex-col items-center justify-center w-5/6 m-auto mb-4 duration-300 bg-white shadow-xl hover:shadow-2xl h-96 hoverborder-gray-200 hover:border-2 group hover:scale-105 rounded-xl">
               <div className="flex justify-center p-4 mt-4 sm:w-full">
                 <img className="h-16" src={item.icon} alt="House" />
               </div>
