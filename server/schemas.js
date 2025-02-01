@@ -6,6 +6,7 @@ const formSchema = new mongoose.Schema({
   type: String,
   firstName: String,
   lastName: String,
+  issue: String,
   phoneNumber: String,
   email: String,
   address: {
