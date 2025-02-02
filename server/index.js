@@ -7,13 +7,13 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail", // You can use "outlook", "yahoo", or custom SMTP as needed
-  auth: {
-    user: process.env.EMAIL_USER, // Your email address (e.g., Gmail)
-    pass: process.env.EMAIL_PASS, // App password (if using Gmail)
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   service: "gmail", // You can use "outlook", "yahoo", or custom SMTP as needed
+//   auth: {
+//     user: process.env.EMAIL_USER, // Your email address (e.g., Gmail)
+//     pass: process.env.EMAIL_PASS, // App password (if using Gmail)
+//   },
+// });
 
 const app = express();
 
