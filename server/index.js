@@ -5,7 +5,17 @@ const helmet = require("helmet");
 const { Form, Customers } = require("./schemas.js");
 const bodyParser = require("body-parser");
 const path = require("path");
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
+
+// const transporter = nodemailer.createTransport({
+//   host: process.env.SMTP_HOST,
+//   port: process.env.SMTP_PORT || 587,
+//   secure: false, // true for 465, false for other ports
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
 
 // const transporter = nodemailer.createTransport({
 //   service: "gmail", // You can use "outlook", "yahoo", or custom SMTP as needed
@@ -39,16 +49,6 @@ mongoose.connection.on("connected", () => {
 mongoose.connection.on("error", (error) =>
   console.error("MongoDB Connection Error:", error)
 );
-
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT || 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
 app.get("*", (req, res) => {
   res.sendFile(
@@ -124,24 +124,24 @@ app.post("/api/form/:type/:apiKey", async (req, res) => {
     );
 
     // Send email notification and handle errors
-    try {
-      await transporter.sendMail({
-        from: `"Barnett Technologies Alerts" <${process.env.EMAIL_USER}>`,
-        to: "barnetttechnologies@gmail.com", // Your email address where you want the alert
-        subject: `New Ticket Created: ${result.type}`,
-        html: `
-        <h2>New Ticket Submitted</h2>
-        <p><strong>Customer:</strong> ${firstName} ${lastName}</p>
-        <p><strong>Issue:</strong> ${issue}</p>
-        <p><strong>Phone Number:</strong> ${phoneNumber}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Address:</strong> ${address.street}, ${address.city}, ${address.state} ${address.zip}</p>
-      `,
-      });
-      console.log("Email sent successfully");
-    } catch (emailError) {
-      console.error("Error sending email:", emailError);
-    }
+    // try {
+    //   await transporter.sendMail({
+    //     from: `"Barnett Technologies Alerts" <${process.env.EMAIL_USER}>`,
+    //     to: "barnetttechnologies@gmail.com", // Your email address where you want the alert
+    //     subject: `New Ticket Created: ${result.type}`,
+    //     html: `
+    //     <h2>New Ticket Submitted</h2>
+    //     <p><strong>Customer:</strong> ${firstName} ${lastName}</p>
+    //     <p><strong>Issue:</strong> ${issue}</p>
+    //     <p><strong>Phone Number:</strong> ${phoneNumber}</p>
+    //     <p><strong>Email:</strong> ${email}</p>
+    //     <p><strong>Address:</strong> ${address.street}, ${address.city}, ${address.state} ${address.zip}</p>
+    //   `,
+    //   });
+    //   console.log("Email sent successfully");
+    // } catch (emailError) {
+    //   console.error("Error sending email:", emailError);
+    // }
 
     // Corrected response format
     res.status(201).json({
