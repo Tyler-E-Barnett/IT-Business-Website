@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const { Form, Customers } = require("./schemas.js");
 const bodyParser = require("body-parser");
 const path = require("path");
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
 
 // const transporter = nodemailer.createTransport({
 //   service: "gmail", // You can use "outlook", "yahoo", or custom SMTP as needed
