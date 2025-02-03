@@ -5,25 +5,10 @@ const helmet = require("helmet");
 const { Form, Customers } = require("./schemas.js");
 const bodyParser = require("body-parser");
 const path = require("path");
-// const nodemailer = require("nodemailer");
+const sgMail = require("@sendgrid/mail");
 
-// const transporter = nodemailer.createTransport({
-//   host: process.env.SMTP_HOST,
-//   port: process.env.SMTP_PORT || 587,
-//   secure: false, // true for 465, false for other ports
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
-//   },
-// });
-
-// const transporter = nodemailer.createTransport({
-//   service: "gmail", // You can use "outlook", "yahoo", or custom SMTP as needed
-//   auth: {
-//     user: process.env.EMAIL_USER, // Your email address (e.g., Gmail)
-//     pass: process.env.EMAIL_PASS, // App password (if using Gmail)
-//   },
-// });
+// Set the SendGrid API key from environment variables
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const app = express();
 
@@ -123,27 +108,27 @@ app.post("/api/form/:type/:apiKey", async (req, res) => {
       { new: true }
     );
 
-    // Send email notification and handle errors
-    // try {
-    //   await transporter.sendMail({
-    //     from: `"Barnett Technologies Alerts" <${process.env.EMAIL_USER}>`,
-    //     to: "barnetttechnologies@gmail.com", // Your email address where you want the alert
-    //     subject: `New Ticket Created: ${result.type}`,
-    //     html: `
-    //     <h2>New Ticket Submitted</h2>
-    //     <p><strong>Customer:</strong> ${firstName} ${lastName}</p>
-    //     <p><strong>Issue:</strong> ${issue}</p>
-    //     <p><strong>Phone Number:</strong> ${phoneNumber}</p>
-    //     <p><strong>Email:</strong> ${email}</p>
-    //     <p><strong>Address:</strong> ${address.street}, ${address.city}, ${address.state} ${address.zip}</p>
-    //   `,
-    //   });
-    //   console.log("Email sent successfully");
-    // } catch (emailError) {
-    //   console.error("Error sending email:", emailError);
-    // }
+    const msg = {
+      to: "barnetttechnologies@gmail.com", // The email address where you want the alert
+      from: `Barnett Technologies Alerts <${process.env.SENDGRID_FROM_EMAIL}>`, // Verified sender on SendGrid
+      subject: `New Ticket Created: ${result.type}`,
+      html: `
+        <h2>New Ticket Submitted</h2>
+        <p><strong>Customer:</strong> ${firstName} ${lastName}</p>
+        <p><strong>Issue:</strong> ${issue}</p>
+        <p><strong>Phone Number:</strong> ${phoneNumber}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Address:</strong> ${address.street}, ${address.city}, ${address.state} ${address.zip}</p>
+      `,
+    };
 
-    // Corrected response format
+    try {
+      await sgMail.send(msg);
+      console.log("Email sent successfully");
+    } catch (emailError) {
+      console.error("Error sending email:", emailError);
+    }
+
     res.status(201).json({
       message: "Ticket created and added to customer",
       ticket: result,
