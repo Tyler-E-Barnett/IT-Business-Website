@@ -71,6 +71,7 @@ app.post("/api/form/:type/:apiKey", async (req, res) => {
         lastName,
         email,
         phoneNumber,
+        address,
         tickets: [], // Initialize tickets array
       });
       await customer.save();

@@ -26,6 +26,12 @@ const customerSchema = new mongoose.Schema({
   lastName: String,
   email: { type: String, unique: true, sparse: true },
   phoneNumber: { type: String, unique: true, sparse: true },
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    zip: String,
+  },
   tickets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Form" }],
 });
 
