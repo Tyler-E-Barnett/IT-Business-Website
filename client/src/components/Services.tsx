@@ -36,7 +36,7 @@ const serviceData = [
 export default function Services() {
   return (
     <div className="flex mb-20">
-      <div className="grid grid-cols-1 gap-6 p-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-3 sm:grid-cols-2">
         {serviceData.map((item) => (
           <Link
             to={`/form/${item.page}`}
@@ -60,7 +60,7 @@ export default function Services() {
                 <p className="text-sm font-semibold text-sky-600">
                   {item.summary}
                 </p>
-                <p className="mt-2 text-sm text-gray-500">{item.description}</p>
+                <p className="mt-2 text-xs text-gray-500">{item.description}</p>
               </div>
             </div>
           </Link>
