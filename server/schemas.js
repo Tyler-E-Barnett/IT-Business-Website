@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const formSchema = new mongoose.Schema({
   status: { type: String, default: "pending" },
   type: String,
+  companyName: String,
   firstName: String,
   lastName: String,
   issue: String,
@@ -24,6 +25,7 @@ const Form = mongoose.model("Form", formSchema);
 const customerSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
+  companyName: String,
   email: { type: String, unique: true, sparse: true },
   phoneNumber: { type: String, unique: true, sparse: true },
   address: {

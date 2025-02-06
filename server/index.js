@@ -56,7 +56,15 @@ app.post("/api/form/:type/:apiKey", async (req, res) => {
   }
 
   const type = req.params["type"];
-  const { firstName, lastName, issue, phoneNumber, email, address } = req.body;
+  const {
+    firstName,
+    lastName,
+    companyName,
+    issue,
+    phoneNumber,
+    email,
+    address,
+  } = req.body;
 
   try {
     // Check if the customer exists using email or phone number
@@ -67,6 +75,7 @@ app.post("/api/form/:type/:apiKey", async (req, res) => {
     if (!customer) {
       // Create a new customer if not found
       customer = new Customers({
+        companyName,
         firstName,
         lastName,
         email,
@@ -87,6 +96,7 @@ app.post("/api/form/:type/:apiKey", async (req, res) => {
     const newTicket = new Form({
       status: "pending",
       type,
+      companyName,
       firstName,
       lastName,
       issue,
@@ -115,6 +125,7 @@ app.post("/api/form/:type/:apiKey", async (req, res) => {
       subject: `New Ticket Created: ${result.type}`,
       html: `
         <h2>New Ticket Submitted</h2>
+        <p><strong>Company:</strong> ${companyName}</p>
         <p><strong>Customer:</strong> ${firstName} ${lastName}</p>
         <p><strong>Issue:</strong> ${issue}</p>
         <p><strong>Phone Number:</strong> ${phoneNumber}</p>

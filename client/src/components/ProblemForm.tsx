@@ -5,12 +5,10 @@ import axios from "axios";
 
 const ProblemForm = () => {
   const navigate = useNavigate();
-  const { type } = useParams();
-
-  // const server = "https://barnett-server-0ed9053145e3.herokuapp.com";
-  // const server = "/server";
+  const { type } = useParams(); // "development", "business", or "pickup/on-site"
 
   const initialValues = {
+    companyName: "",
     firstName: "",
     lastName: "",
     issue: "",
@@ -24,271 +22,312 @@ const ProblemForm = () => {
     },
   };
 
-  const validationSchema =
-    type !== "development"
-      ? yup.object({
-          firstName: yup.string().required("Required"),
-          lastName: yup.string().required("Required"),
-          issue: yup.string().required("Required"),
-          phoneNumber: yup.string().required("Required"),
-          email: yup.string().email("Invalid email").required("Required"),
-          address: yup.object().shape({
-            street: yup.string().required("Required"),
-            city: yup.string().required("Required"),
-            state: yup.string().required("Required"),
-            zip: yup.string().required("Required").length(5),
-          }),
-        })
-      : yup.object({
-          firstName: yup.string().required("Required"),
-          lastName: yup.string().required("Required"),
-          issue: yup.string().required("Required"),
-          phoneNumber: yup.string().required("Required"),
-          email: yup.string().email("Invalid email").required("Required"),
-        });
+  const schemaType = (type: string) => {
+    if (type === "development") {
+      return yup.object({
+        firstName: yup.string().required("Required"),
+        lastName: yup.string().required("Required"),
+        issue: yup.string().required("Required"),
+        phoneNumber: yup.string().required("Required"),
+        email: yup.string().email("Invalid email").required("Required"),
+      });
+    } else if (type === "business") {
+      return yup.object({
+        companyName: yup.string().required("Required"),
+        firstName: yup.string().required("Required"),
+        lastName: yup.string().required("Required"),
+        issue: yup.string().required("Required"),
+        phoneNumber: yup.string().required("Required"),
+        email: yup.string().email("Invalid email").required("Required"),
+        address: yup.object().shape({
+          street: yup.string().required("Required"),
+          city: yup.string().required("Required"),
+          state: yup.string().required("Required"),
+          zip: yup.string().required("Required").length(5),
+        }),
+      });
+    } else {
+      return yup.object({
+        firstName: yup.string().required("Required"),
+        lastName: yup.string().required("Required"),
+        issue: yup.string().required("Required"),
+        phoneNumber: yup.string().required("Required"),
+        email: yup.string().email("Invalid email").required("Required"),
+        address: yup.object().shape({
+          street: yup.string().required("Required"),
+          city: yup.string().required("Required"),
+          state: yup.string().required("Required"),
+          zip: yup.string().required("Required").length(5),
+        }),
+      });
+    }
+  };
+
+  const validationSchema = schemaType(type || "");
 
   const onSubmit = async (values: any, { setSubmitting }: any) => {
     const key = "HOrDSminglINtIONAlMANTEreStERONyVeLEClINENDOWEAmBi";
 
     try {
-      const config = {
-        method: "post",
-        url: `/api/form/${type}/${key}`,
-        withCredentials: true,
+      await axios.post(`/api/form/${type}/${key}`, values, {
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
         },
-        data: values,
-      };
-      await axios(config);
-      // go to thank you page.
+      });
       navigate("/thankyou");
     } catch (error) {
       alert("Error Submitting");
     }
-
     setSubmitting(false);
   };
 
   return (
-    <div className="">
-      <h1 className="mt-8 text-4xl font-bold text-center">{type}</h1>
+    <div className="max-w-3xl mx-auto">
+      <h1 className="mt-8 text-4xl font-bold text-center capitalize">
+        {type} Form
+      </h1>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
-        <Form className="w-full max-w-lg p-5 m-auto mt-10">
-          <div className="flex flex-wrap mb-6 -mx-3">
-            <div className="w-1/2 px-3 mb-6 md:mb-0">
+        <Form className="mt-10 space-y-6">
+          {/* Business-specific company name field */}
+          {type === "business" && (
+            <div>
               <label
-                className="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
-                htmlFor="grid-first-name"
+                htmlFor="companyName"
+                className="block mb-2 text-sm font-bold text-gray-700"
+              >
+                Company Name
+              </label>
+              <Field
+                type="text"
+                id="companyName"
+                name="companyName"
+                placeholder="Barnett Technologies"
+                className="w-full px-4 py-2 bg-gray-200 border rounded focus:bg-white focus:outline-none"
+              />
+              <ErrorMessage
+                name="companyName"
+                component="div"
+                className="text-xs text-red-500"
+              />
+            </div>
+          )}
+
+          {/* Common Fields */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="firstName"
+                className="block mb-2 text-sm font-bold text-gray-700"
               >
                 First Name
               </label>
               <Field
                 type="text"
-                id="grid-first-name"
+                id="firstName"
                 name="firstName"
                 placeholder="John"
-                className="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border rounded appearance-none focus:outline-none focus:bg-white"
+                className="w-full px-4 py-2 bg-gray-200 border rounded focus:bg-white focus:outline-none"
               />
               <ErrorMessage
                 name="firstName"
                 component="div"
-                className="text-xs italic text-red-500"
+                className="text-xs text-red-500"
               />
             </div>
-            <div className="w-1/2 px-3">
+
+            <div>
               <label
-                className="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
-                htmlFor="grid-last-name"
+                htmlFor="lastName"
+                className="block mb-2 text-sm font-bold text-gray-700"
               >
                 Last Name
               </label>
               <Field
                 type="text"
-                id="grid-last-name"
+                id="lastName"
                 name="lastName"
                 placeholder="Smith"
-                className="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white"
+                className="w-full px-4 py-2 bg-gray-200 border rounded focus:bg-white focus:outline-none"
               />
               <ErrorMessage
                 name="lastName"
                 component="div"
-                className="text-xs italic text-red-500"
+                className="text-xs text-red-500"
               />
             </div>
           </div>
-          <div className="flex flex-wrap mb-6 -mx-3">
-            <div className="w-full px-3">
-              <label
-                className="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
-                htmlFor="grid-issue"
-              >
-                {type === "development"
-                  ? "Give a description of your idea/needs"
-                  : "Describe your issue."}
-              </label>
-              <Field
-                as="textarea"
-                id="grid-issue"
-                name="issue"
-                placeholder={
-                  type === "development"
-                    ? "I need a REST API!"
-                    : "My computer keeps crashing!"
-                }
-                className="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white"
-                rows={5}
-                maxLength={500}
-              />
-              <ErrorMessage
-                name="issue"
-                component="div"
-                className="text-xs italic text-red-500"
-              />
-            </div>
+
+          <div>
+            <label
+              htmlFor="issue"
+              className="block mb-2 text-sm font-bold text-gray-700"
+            >
+              {type === "development"
+                ? "Describe your idea/needs"
+                : "Describe the issue"}
+            </label>
+            <Field
+              as="textarea"
+              id="issue"
+              name="issue"
+              rows={4}
+              placeholder={
+                type === "development"
+                  ? "I need a custom API built!"
+                  : "My laptop won't boot."
+              }
+              className="w-full px-4 py-2 bg-gray-200 border rounded focus:bg-white focus:outline-none"
+            />
+            <ErrorMessage
+              name="issue"
+              component="div"
+              className="text-xs text-red-500"
+            />
           </div>
-          <div className="flex flex-wrap mb-6 -mx-3">
-            <div className="w-full px-3">
-              <label
-                className="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
-                htmlFor="grid-phoneNumber"
-              >
-                Phone Number
-              </label>
-              <Field
-                type="text"
-                id="grid-phoneNumber"
-                name="phoneNumber"
-                placeholder="(123) 456-7890"
-                className="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white"
-              />
-              <ErrorMessage
-                name="phoneNumber"
-                component="div"
-                className="text-xs italic text-red-500"
-              />
-            </div>
+
+          <div>
+            <label
+              htmlFor="phoneNumber"
+              className="block mb-2 text-sm font-bold text-gray-700"
+            >
+              Phone Number
+            </label>
+            <Field
+              type="text"
+              id="phoneNumber"
+              name="phoneNumber"
+              placeholder="(123) 456-7890"
+              className="w-full px-4 py-2 bg-gray-200 border rounded focus:bg-white focus:outline-none"
+            />
+            <ErrorMessage
+              name="phoneNumber"
+              component="div"
+              className="text-xs text-red-500"
+            />
           </div>
-          <div className="flex flex-wrap mb-6 -mx-3">
-            <div className="w-full px-3">
-              <label
-                className="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
-                htmlFor="grid-email"
-              >
-                Email
-              </label>
-              <Field
-                type="email"
-                id="grid-email"
-                placeholder="John.Smith@gmail.com"
-                name="email"
-                className="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white"
-              />
-              <ErrorMessage
-                name="email"
-                component="div"
-                className="text-xs italic text-red-500"
-              />
-            </div>
+
+          <div>
+            <label
+              htmlFor="email"
+              className="block mb-2 text-sm font-bold text-gray-700"
+            >
+              Email
+            </label>
+            <Field
+              type="email"
+              id="email"
+              name="email"
+              placeholder="john.smith@example.com"
+              className="w-full px-4 py-2 bg-gray-200 border rounded focus:bg-white focus:outline-none"
+            />
+            <ErrorMessage
+              name="email"
+              component="div"
+              className="text-xs text-red-500"
+            />
           </div>
-          {type !== "development" && (
-            <div className="">
-              <div className="flex flex-wrap mb-6 -mx-3">
-                <div className="w-full px-3">
-                  <label
-                    className="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
-                    htmlFor="grid-address-street"
-                  >
-                    Address
-                  </label>
-                  <Field
-                    type="text"
-                    id="grid-address-street"
-                    name="address.street"
-                    placeholder="123 Main St"
-                    className="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white"
-                  />
-                  <ErrorMessage
-                    name="address.street"
-                    component="div"
-                    className="text-xs italic text-red-500"
-                  />
-                </div>
+
+          {(type === "business" || type === "pickup" || type === "on-site") && (
+            <>
+              <div>
+                <label
+                  htmlFor="address.street"
+                  className="block mb-2 text-sm font-bold text-gray-700"
+                >
+                  Street Address
+                </label>
+                <Field
+                  type="text"
+                  id="address.street"
+                  name="address.street"
+                  placeholder="123 Main St"
+                  className="w-full px-4 py-2 bg-gray-200 border rounded focus:bg-white focus:outline-none"
+                />
+                <ErrorMessage
+                  name="address.street"
+                  component="div"
+                  className="text-xs text-red-500"
+                />
               </div>
-              <div className="flex flex-wrap mb-6 -mx-3">
-                <div className="w-1/3 px-3 ">
+
+              <div className="grid grid-cols-3 gap-4">
+                <div>
                   <label
-                    className="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
-                    htmlFor="grid-address-city"
+                    htmlFor="address.city"
+                    className="block mb-2 text-sm font-bold text-gray-700"
                   >
                     City
                   </label>
                   <Field
                     type="text"
-                    id="grid-address-city"
+                    id="address.city"
                     name="address.city"
                     placeholder="Cheshire"
-                    className="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white"
+                    className="w-full px-4 py-2 bg-gray-200 border rounded focus:bg-white focus:outline-none"
                   />
                   <ErrorMessage
                     name="address.city"
                     component="div"
-                    className="text-xs italic text-red-500"
+                    className="text-xs text-red-500"
                   />
                 </div>
-                <div className="w-1/3 px-3 ">
+
+                <div>
                   <label
-                    className="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
-                    htmlFor="grid-address-state"
+                    htmlFor="address.state"
+                    className="block mb-2 text-sm font-bold text-gray-700"
                   >
                     State
                   </label>
                   <Field
                     type="text"
-                    id="grid-address-state"
+                    id="address.state"
                     name="address.state"
                     placeholder="CT"
-                    className="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white"
+                    className="w-full px-4 py-2 bg-gray-200 border rounded focus:bg-white focus:outline-none"
                   />
                   <ErrorMessage
                     name="address.state"
                     component="div"
-                    className="text-xs italic text-red-500"
+                    className="text-xs text-red-500"
                   />
                 </div>
-                <div className="w-1/3 px-3 ">
+
+                <div>
                   <label
-                    className="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
-                    htmlFor="grid-address-zip"
+                    htmlFor="address.zip"
+                    className="block mb-2 text-sm font-bold text-gray-700"
                   >
-                    Zip
+                    Zip Code
                   </label>
                   <Field
                     type="text"
-                    id="grid-address-zip"
+                    id="address.zip"
                     name="address.zip"
                     placeholder="06410"
-                    className="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white"
+                    className="w-full px-4 py-2 bg-gray-200 border rounded focus:bg-white focus:outline-none"
                   />
                   <ErrorMessage
                     name="address.zip"
                     component="div"
-                    className="text-xs italic text-red-500"
+                    className="text-xs text-red-500"
                   />
                 </div>
               </div>
-            </div>
+            </>
           )}
 
           <div className="flex justify-end">
-            <div className="p-3 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
-              <button type="submit">Submit</button>
-            </div>
+            <button
+              type="submit"
+              className="px-6 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+            >
+              Submit
+            </button>
           </div>
         </Form>
       </Formik>

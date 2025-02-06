@@ -1,6 +1,7 @@
 import house from "../assets/House.png";
 import laptop from "../assets/Laptop.png";
 import atom from "../assets/Atom.png";
+import building from "../assets/Building.png";
 import { Link } from "react-router-dom";
 
 const serviceData = [
@@ -22,10 +23,17 @@ const serviceData = [
     description: `We make IT support convenient and stress-free with our pickup services! We will pick up your device, repair it, and deliver it back to you.`,
   },
   {
-    title: "Development",
+    title: "Business IT Support",
+    icon: building,
+    summary: "Support for your Business IT Needs",
+    page: "business",
+    pricing: "$80 - $200",
+    description: `We provide IT support for businesses of all sizes. Whether you need a network setup, a server configured, Microsoft 365 integration or a custom software solution, our team is here to help.`,
+  },
+  {
+    title: "Software Development",
     icon: atom,
-    summary:
-      "Custom Web Applications and API Integrations to Support your Business.",
+    summary: "Custom Web Applications and API Integrations.",
     page: "development",
     pricing: "Get a Quote",
     description:
@@ -36,7 +44,7 @@ const serviceData = [
 export default function Services() {
   return (
     <div className="flex mb-20">
-      <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
         {serviceData.map((item) => (
           <Link
             to={`/form/${item.page}`}
@@ -44,7 +52,7 @@ export default function Services() {
             aria-current="page"
             key={item.title}
           >
-            <div className="relative flex flex-col items-center justify-start w-5/6 m-auto duration-300 bg-white shadow-xl hover:shadow-2xl hover:scale-105 h-96 rounded-xl">
+            <div className="relative flex flex-col items-center justify-start w-5/6 m-auto duration-300 bg-white border-2 shadow-xl hover:shadow-2xl hover:scale-105 h-80 sm:h-96 sm:w-full rounded-xl">
               {/* Icon Section */}
               <div className="flex justify-center w-full p-4 mt-6 sm:mt-8">
                 <img className="h-16" src={item.icon} alt={item.title} />
