@@ -88,6 +88,7 @@ app.post("/api/form/:type/:apiKey", async (req, res) => {
       // Optionally update customer details if they exist
       customer.firstName = firstName;
       customer.lastName = lastName;
+      customer.companyName = companyName;
       customer.phoneNumber = phoneNumber;
       await customer.save();
     }
