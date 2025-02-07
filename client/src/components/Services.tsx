@@ -59,7 +59,7 @@ export default function Services() {
               </div>
 
               {/* Title */}
-              <h2 className="text-2xl font-semibold text-center">
+              <h2 className="px-2 text-2xl font-semibold text-center">
                 {item.title}
               </h2>
 
