@@ -82,7 +82,7 @@ const ProblemForm = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl p-4 mx-auto">
       <h1 className="mt-8 text-4xl font-bold text-center capitalize">
         {type} Form
       </h1>
